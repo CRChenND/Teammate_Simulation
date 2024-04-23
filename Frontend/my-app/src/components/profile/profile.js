@@ -7,6 +7,8 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography'; 
 
 
+
+
 const Main = () => {
   const navigate = useNavigate();
   const profileNav = () => {
@@ -52,16 +54,16 @@ const Main = () => {
         <Typography variant="h6" component="h2" style={{ alignSelf: 'flex-start' }}>
                 Attributes
         </Typography>
-            <Box style={{ width: '100%' }}>
+            <Box style={{ width: '100%' , marginRight:'50px', marginLeft: '50px'}}>
 
-                <Box style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                <Box style={{ display: 'flex', justifycontent: 'center', marginBottom: '10px' }}>
                 <TextField id="first-name" label="First name" variant="outlined" />
                 <TextField id="last-name" label="Last name" variant="outlined" />
                 <TextField id="age" label="Age" variant="outlined" />
                 <TextField id="gender" label="Gender" variant="outlined" />
                 </Box>
 
-                <Box style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                <Box style={{ display: 'flex', justifycontent: 'center', marginBottom: '10px' }}>
                 <TextField id="english-proficiency" label="English proficiency" variant="outlined" style={{ flex: 2 }} />
                 <TextField id="major" label="Major" variant="outlined" style={{ flex: 1 }} />
                 <TextField id="grade" label="Grade" variant="outlined" style={{ flex: 1 }} />
