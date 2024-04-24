@@ -70,15 +70,15 @@ class Leadership_traits_dict(BaseModel):
     Leadership_style: str = Field(None, description="select from Coercive, Authoritative, Affiliative, Democratic, Pacesetting, Coaching")
 
 class PersonaProfile(BaseModel):
-    first_name: str = Field(None, description="First name of the persona, cannot be left blank")
-    last_name: str = Field(None, description="Last name of the persona, cannot be left blank")
+    first_name: str = Field(None, description="First name of the persona, cannot be left blank, do not always use the most common names")
+    last_name: str = Field(None, description="Last name of the persona, cannot be left blank, do not always use the most common names")
     age: str = Field(None, description="Age of the persona, cannot be left blank")
     gender: str = Field(None, description="Gender of the persona, cannot be left blank")
     english_proficiency: str = Field(None, description="English proficiency of the persona, e.g. beginner, intermediate, advanced, native")
-    major: str = Field(None, description="Major of the persona, e.g. computer science, physics, etc.")
+    major: str = Field(None, description="Major of the persona, e.g. computer science, physics, etc., do not always use the most common majors")
     grades: str = Field(None, description="Grades in the format freshman, sophomore, junior, senior")
     personality_traits: Personality_traits_dict
-    leadership_traits: Leadership_traits = Field(None, description="Leadership style of the persona: Coercive, Authoritative, Affiliative, Democratic, Pacesetting, Coaching")
+    leadership_traits: Leadership_traits #= Field(None, description="Leadership style of the persona: Coercive, Authoritative, Affiliative, Democratic, Pacesetting, Coaching")
     additional_info: str = Field(None, description="Any additional information about the persona, e.g. hobbies, interests, etc.")
 
 
@@ -95,12 +95,12 @@ def generate_persona_attributes(input_data: PersonaInput) -> PersonaProfile:
     parser = PydanticOutputParser(pydantic_object=PersonaProfile)
 
     prompt = PromptTemplate(
-        template="generate a profile based on {guidance} {format_instructions}, do not leave any field blank or null",
+        template="generate a profile based on {guidance} {format_instructions}, if some attibutes are not provided, please generate the attributes randomly (do not always choose positive attributes), do not leave any field blank or null",
         input_variables=['guidance'],
         partial_variables={"format_instructions": parser.get_format_instructions()},
     )
 
-    chain = LLMChain(llm=ChatOpenAI(model_name='gpt-3.5-turbo',temperature=0.7),
+    chain = LLMChain(llm=ChatOpenAI(model_name='gpt-3.5-turbo',temperature=1.3),
                          prompt=prompt)
     result = chain.invoke(input={
         'guidance':input_data
@@ -119,7 +119,7 @@ def generate_persona_description(input_data: PersonaInput) -> str:
         partial_variables={"format_instructions": parser.get_format_instructions()},
     )
 
-    chain = LLMChain(llm=ChatOpenAI(model_name='gpt-3.5-turbo',temperature=0.7),
+    chain = LLMChain(llm=ChatOpenAI(model_name='gpt-3.5-turbo',temperature=1.3),
                          prompt=prompt)
     result = chain.invoke(input={
         'guidance':input_data
@@ -140,7 +140,7 @@ def generate_topic(input_data: PersonaInput) -> str:
         partial_variables={"format_instructions": parser.get_format_instructions()},
     )
 
-    chain = LLMChain(llm=ChatOpenAI(model_name='gpt-3.5-turbo',temperature=0.7),
+    chain = LLMChain(llm=ChatOpenAI(model_name='gpt-3.5-turbo',temperature=1.3),
                          prompt=prompt)
     result = chain.invoke(input={
         'guidance':input_data
@@ -166,12 +166,12 @@ def post_process_output(output):
 # load json file
 prompt = load_json('prompt.json')
 
-attributes = generate_persona_attributes({"guidance": prompt["random_attributes"]})
+#attributes = generate_persona_attributes({"guidance": prompt["random_attributes"]})
 
-print('//////////////////////////')
+#print('//////////////////////////')
 
 
 
-generate_persona_description({"guidance": prompt["profile_description"]+str(attributes)})
+#generate_persona_description({"guidance": prompt["profile_description"]+str(attributes)})
 # format the output, remove all the quotation marks
 # output = output.replace('"', '')

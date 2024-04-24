@@ -5,6 +5,7 @@ import os
 from langchain.output_parsers import PydanticOutputParser
 from pydantic import BaseModel
 from generator import generate_persona_attributes, generate_persona_description, load_json, generate_topic, post_process_output
+import json
 
 prompt_json = load_json('prompt.json')
 
@@ -19,24 +20,20 @@ class output_format(BaseModel):
     name: str
     conversation: str
 
-agent1 = generate_persona_attributes({"guidance": "Alice: a 18-year-old computer science student who is passionate about AI."})
+#agent1 = generate_persona_attributes({"guidance": "Alice: a 18-year-old computer science student who is passionate about AI."})
+agent1 = generate_persona_attributes({"guidance": ""})
 agent1 = generate_persona_description({"guidance": prompt_json["profile_description"] + str(agent1)})
-agent2 = generate_persona_attributes({"guidance": "Bob: a 20-year-old applied physic student who is interested in investing in AI."})
+#agent2 = generate_persona_attributes({"guidance": "Bob: a 20-year-old applied physic student who is interested in investing in AI."})
+agent2 = generate_persona_attributes({"guidance": ""})
 agent2 = generate_persona_description({"guidance": prompt_json["profile_description"] + str(agent2)})
-agent3 = generate_persona_attributes({"guidance": "Charlie: a 22-year-old AI researcher who is working on a new AI model"})
+#agent3 = generate_persona_attributes({"guidance": "Charlie: a 22-year-old AI researcher who is working on a new AI model"})
+agent3 = generate_persona_attributes({"guidance": ""})
 agent3 = generate_persona_description({"guidance": prompt_json["profile_description"] + str(agent3)})
 
 
 prompt = prompt_json["grouping_simulation"]
 prompt += f"1. {agent1} 2. {agent2} 3. {agent3}"
-# prompt = prompt.replace('"', '')
-# #remove all the word guidance in the prompt
-# prompt = prompt.replace("guidance", "")
-# # remove all the brackets in the prompt
-# prompt = prompt.replace("{", "")
-# prompt = prompt.replace("}", "")
-# # remove all the newline in the prompt
-# prompt = prompt.replace("\n", "")
+
 prompt = post_process_output(prompt)
 print('prompt:', prompt)
 
@@ -52,13 +49,6 @@ prompt = ChatPromptTemplate.from_messages(
     ]
 )
 
-# parser = PydanticOutputParser(pydantic_object=output_format)
-#
-# prompt = PromptTemplate(
-#     template="generate a profile based on {guidance} {format_instructions}",
-#     input_variables=['guidance'],
-#     partial_variables={"format_instructions": parser.get_format_instructions()},
-# )
 
 runnable = prompt | model
 
@@ -82,20 +72,11 @@ with_message_history = RunnableWithMessageHistory(
     history_messages_key="history",
 )
 
-topic_example = 'Implement a libiary system program.'
+topic_example = 'Implement a library system program.'
 
 
 # generate a topic using the prompt
 topic_random = generate_topic({"guidance": topic_example})
-# # remove all the quotation marks
-# topic_random = topic_random.replace('"', '')
-# # remove all the newline in the prompt
-# topic_random = topic_random.replace("\n", "")
-# # remove all the word guidance in the prompt
-# topic_random = topic_random.replace("guidance", "")
-# # remove all the brackets in the prompt
-# topic_random = topic_random.replace("{", "")
-# topic_random = topic_random.replace("}", "")
 topic_random = post_process_output(topic_random)
 
 print('topic:', topic_random)
@@ -109,9 +90,40 @@ with_message_history.invoke(
 
 # Remembers
 with_message_history.invoke(
-    {"input": "please generate more conversation between this 3 person"},
+    {"input": "please generate more conversation between them, you can stimulate some conflicts between them."},
     config={"configurable": {"session_id": "abc123"}},
 )
 
-print(with_message_history.get_session_history("abc123"))
+#print(with_message_history.get_session_history("abc123"))
+text = str(with_message_history.get_session_history("abc123"))
+print('//////////////////////////')
+print(text)
+
+# Split the conversation into individual dialogues
+dialogues = text.split('\n')
+
+# Create a list to hold the structured data
+structured_data = []
+
+# Parse each dialogue and extract the speaker and their message
+for idx, dialogue in enumerate(dialogues):
+    if ': ' in dialogue:
+        if idx == 0:
+            pass
+        else:
+            speaker, message = dialogue.split(': ', 1)
+            if speaker == 'Human':
+                pass
+            elif speaker == 'AI':
+                speaker, message = message.split(': ', 1)
+                structured_data.append({'speaker': speaker, 'message': message})
+            else:
+                structured_data.append({'speaker': speaker, 'message': message})
+
+# Convert the structured data into JSON format
+json_data = json.dumps(structured_data, indent=4)
+
+# Save the JSON data to a file
+with open('conversation.json', 'w') as json_file:
+    json_file.write(json_data)
 
