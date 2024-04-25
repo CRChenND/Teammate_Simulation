@@ -1,16 +1,102 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography'; 
+import Slider from '@mui/material/Slider';
+import LeadershipGrid from './leadershipGrid';
+import Dialog from '@mui/material/Dialog';
+import LinearProgress from '@mui/material/LinearProgress';
 
+
+// Define marks for each slider
+const marksOpenness = [
+  { value: 0, label: 'Close' },
+  { value: 100, label: 'Open' }
+];
+
+const marksConscientiousness = [
+  { value: 0, label: 'Spontaneous' },
+  { value: 100, label: 'Conscientious' }
+];
+
+const marksExtraversion = [
+  { value: 0, label: 'Introverted' },
+  { value: 100, label: 'Extroverted' }
+];
+
+const marksAgreeableness = [
+  { value: 0, label: 'Hostile' },
+  { value: 100, label: 'Agreeable' }
+];
+
+const marksNeuroticism = [
+  { value: 0, label: 'Stable' },
+  { value: 100, label: 'Neurotic' }
+];
+
+function valuetext(value) {
+  return `${value}`;
+}
 
 const Main = () => {
+
+  const [profileDescription, setProfileDescription] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [age, setAge] = useState('');
+  const [gender, setGender] = useState('');
+  const [englishProficiency, setEnglishProficiency] = useState('');
+  const [major, setMajor] = useState('');
+  const [grade, setGrade] = useState('');
+
+  const [loading, setLoading] = useState(false); 
+
   const navigate = useNavigate();
+
   const profileNav = () => {
-    navigate("/profile");
+    navigate('/simulate');
+  };
+
+  const generatePersona = async () => {
+    try {
+      // Get the value from the TextField
+      setLoading(true); 
+      const inputElement = document.getElementById('outlined-basic');
+      const inputValue = inputElement.value;
+      console.log(inputValue)
+
+      // Send the input to the server endpoint
+      const response = await fetch('http://127.0.0.1:5000/generate_profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ guidance: inputValue })
+      });
+
+      if (response.ok) {
+        const jsonResponse = await response.json();
+        console.log('Server Response:', jsonResponse);
+
+        setProfileDescription(jsonResponse["profile"]["profile"]);
+        setFirstName(jsonResponse["profile"]["first_name"]);
+        setLastName(jsonResponse["profile"]["last_name"]);
+        setAge(jsonResponse["profile"]["age"]);
+        setGender(jsonResponse["profile"]["gender"]);
+        setEnglishProficiency(jsonResponse["profile"]["english_proficiency"]);
+        setMajor(jsonResponse["profile"]["major"]);
+        setGrade(jsonResponse["profile"]["grade"]);
+      } else {
+        console.error('Server responded with status:', response.status);
+      }
+    } catch (error) {
+      console.error('Error occurred:', error);
+    } finally {
+      setLoading(false); 
+    }
   };
 
   return (
@@ -23,10 +109,15 @@ const Main = () => {
           style={{ marginRight: '5px', flexGrow: 1 }} 
           variant="outlined" 
         />
-        <Button variant="contained" onClick={profileNav} style={{ height: '56px' }}>
+        <Button variant="contained" onClick={generatePersona} style={{ height: '56px' }}>
           Generate
         </Button>
       </Box>
+
+      <Dialog open={loading} aria-labelledby="loading-dialog-title">
+        <LinearProgress />
+        <div style={{ padding: 20, textAlign: 'center' }}>Please wait, generating data...</div>
+      </Dialog>
 
       <Typography variant="h6" component="h2" style={{ alignSelf: 'flex-start' , marginLeft: '60px', marginTop: '20px', marginBottom: '5px', fontSize:"24px", fontWeight:"bold"}}>
         Profile description
@@ -34,64 +125,85 @@ const Main = () => {
       <Box display="flex" alignItems="center" justifyContent="center" style={{ width: 'calc(100% - 120px)', margin: '0 60px' }}>
         <textarea 
           id="profile-description" 
-        //   placeholder="Profile description" 
-          style={{ height: '200px', flexGrow: 1, marginRight: '5px', border: '1px solid lightgray', borderRadius: '16px' }} 
+          style={{ height: '200px', flexGrow: 1, marginRight: '5px', border: '1px solid lightgray', borderRadius: '16px' , padding:"20px", fontSize:"18px"}} 
+          value={profileDescription} 
+          onChange={(e) => setProfileDescription(e.target.value)} 
         />
-        <Box display="flex" flexDirection="column" alignItems="center">
+        <Box display="flex" flexDirection="column" alignItems="center" style={{ marginLeft: '30px' }}>
           <Typography variant="h6" component="h2">
             Portrait
           </Typography>
           <Avatar 
-            style={{ height: '180px', width: '180px', marginTop: '10px', marginLeft }}
+            style={{ height: '180px', width: '180px', marginTop: '10px' }}
             alt="Profile Avatar"
             src="" // Add your image path here
           />
         </Box>
       </Box>
 
-        <Typography variant="h6" component="h2" style={{ alignSelf: 'flex-start' , marginLeft: '60px', marginTop: '20px', marginBottom: '5px', fontSize:"24px", fontWeight:"bold"}}>
-                Attributes
+      <Typography variant="h6" component="h2" style={{ alignSelf: 'flex-start' , marginLeft: '60px', marginTop: '20px', marginBottom: '5px', fontSize:"24px", fontWeight:"bold"}}>
+        Attributes
+      </Typography>
+      
+      <Box style={{
+        width: 'calc(100% - 160px)', 
+        margin: '0 80px', 
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '20px', 
+        border: '1.5px solid grey', 
+        borderRadius: '8px'
+      }}>
+        <Typography variant="h6" component="h2" style={{ alignSelf: 'flex-start' , marginLeft: '10px',  marginBottom: '10px', fontSize:"18px", fontWeight:"bold"}}>
+          Basic information
         </Typography>
-        
-        <Box style={{ width: 'calc(100% - 160px)', margin: '0 80px', padding: '20px', border: '1.5px solid grey', borderRadius: '8px' }}>
-          <Box style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-            <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
-                <Typography variant="body1" style={{ marginRight: '10px', fontSize:"21px", fontWeight:"bold" }}>First name:</Typography>
-                <TextField id="first-name" label="First name" variant="outlined" style={{width:'200px'}}/>
-            </Box>
+        <Box style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginBottom: '20px' }}>
+          <TextField id="first-name" label="First name" variant="outlined" style={{width: '30%'}} value={firstName} onChange={(e) => setFirstName(e.target.value)} InputLabelProps={{shrink: true}}/>
+          <TextField id="last-name" label="Last name" variant="outlined" style={{width: '30%'}} value={lastName} onChange={(e) => setLastName(e.target.value)} InputLabelProps={{shrink: true}}/>
+          <TextField id="age" label="Age" variant="outlined" style={{width: '30%'}} value={age} onChange={(e) => setAge(e.target.value)} InputLabelProps={{shrink: true}}/>
+        </Box>
+        <Box style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginBottom: '20px' }}>
+          <TextField id="gender" label="Gender" variant="outlined" style={{width: '20%'}} value={gender} onChange={(e) => setGender(e.target.value)} InputLabelProps={{shrink: true}}/>
+          <TextField id="english-proficiency" label="English proficiency" variant="outlined" style={{width: '20%'}} value={englishProficiency} onChange={(e) => setEnglishProficiency(e.target.value)} InputLabelProps={{shrink: true}}/>
+          <TextField id="major" label="Major" variant="outlined" style={{width: '20%'}} value={major} onChange={(e) => setMajor(e.target.value)} InputLabelProps={{shrink: true}}/>
+          <TextField id="grade" label="Grade" variant="outlined" style={{width: '20%'}} value={grade} onChange={(e) => setGrade(e.target.value)} InputLabelProps={{shrink: true}}/>
+        </Box>
 
-            <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
-                <Typography variant="body1" style={{ marginRight: '10px', fontSize:"21px", fontWeight:"bold" }}>Last name:</Typography>
-                <TextField id="last-name" label="Last name" variant="outlined"/>
-            </Box>
+        <Typography variant="h6" component="h2" style={{ alignSelf: 'flex-start' , marginLeft: '10px',  marginBottom: '10px', fontSize:"18px", fontWeight:"bold"}}>
+          Personality traits
+        </Typography>
 
-            <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
-                <Typography variant="body1" style={{ marginRight: '10px', fontSize:"21px", fontWeight:"bold" }}>Age:</Typography>
-                <TextField id="age" label="Age" variant="outlined" />
-            </Box>
-
-            <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
-                <Typography variant="body1" style={{ marginRight: '10px', fontSize:"21px", fontWeight:"bold" }}>Gender:</Typography>
-                <TextField id="gender" label="Gender" variant="outlined" />
-            </Box>
+        {['Openness', 'Conscientiousness', 'Extraversion', 'Agreeableness', 'Neuroticism'].map((trait, index) => (
+          <Box key={trait} sx={{ width: '80%', marginBottom: '20px' }}>
+            <Typography id={`slider-${trait.toLowerCase()}`} gutterBottom>
+              {trait}
+            </Typography>
+            <Slider
+              track="inverted"
+              aria-labelledby={`slider-${trait.toLowerCase()}`}
+              getAriaValueText={valuetext}
+              defaultValue={50}
+              marks={eval(`marks${trait}`)}
+            />
           </Box>
+        ))}
 
-          <Box style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-              <Box style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
-                  <Typography variant="body1" style={{ marginRight: '10px', fontSize:"21px", fontWeight:"bold" }}>English proficiency:</Typography>
-                  <TextField id="english-proficiency" label="English proficiency" variant="outlined" style={{ width:'400px' }} />
-              </Box>
-              <Box style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
-                  <Typography variant="body1" style={{ marginRight: '10px', fontSize:"21px", fontWeight:"bold" }}>Major:</Typography>
-                  <TextField id="major" label="Major" variant="outlined" style={{ width:'250px'}} />
-              </Box>
-              <Box style={{ display: 'flex', alignItems: 'center' }}>
-                  <Typography variant="body1" style={{ marginRight: '10px', fontSize:"21px", fontWeight:"bold" }}>Grade:</Typography>
-                  <TextField id="grade" label="Grade" variant="outlined" style={{ width:'250px' }} />
-              </Box>
-          </Box>
+        <Typography variant="h6" component="h2" style={{ alignSelf: 'flex-start' , marginLeft: '10px', marginBottom: '5px', fontSize:"18px", fontWeight:"bold"}}>
+          Leadership
+        </Typography>
+
+        <LeadershipGrid/>
+
       </Box>
- 
+
+
+      <Box display="flex" justifyContent="center" style={{ width: '100%', marginTop: '20px' }}>
+        <Button variant="contained" onClick={profileNav} style={{ height: '56px' }}>
+          Simulate
+        </Button>
+      </Box>
+      
     </div>  
   );
 }

@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
-from generator import generate_persona_description
+from flask_cors import CORS
+from generator import generate_persona_attributes
 
 app = Flask(__name__)
+CORS(app) 
 
 @app.route('/generate_profile', methods=['POST'])
 def generate_profile():
@@ -18,10 +20,10 @@ def generate_profile():
         return jsonify({'error': 'No guidance provided'}), 400
 
     # Call the function that generates the persona description
-    result = generate_persona_description(guidance)
+    profile = generate_persona_attributes(guidance)
     
     # Return the result as JSON
-    return jsonify({'response': result}), 200
+    return jsonify({'profile': profile }), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
