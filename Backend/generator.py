@@ -50,11 +50,11 @@ class Personality_traits_bool(BaseModel):
 #     Neuroticism: str = Field(None, description="select from Sensitive, Nervous, Secure, Confident")
 
 class Personality_traits_dict(BaseModel):
-    Openness: str = Field(None, description="a value between 0 to 100 to show the openness, where 0 is close and 100 is open")
-    Conscientiousness: str = Field(None, description="a value between 0 to 100 to show the conscientiousness, where 0 is spontaneous and 100 is conscientious")
-    Extraversion: str = Field(None, description="a value between 0 to 100 to show the extraversion, where 0 is introverted and 100 is extraverted")
-    Agreeableness: str = Field(None, description="a value between 0 to 100 to show the agreeableness, where 0 is hostile and 100 is agreeable")
-    Neuroticism: str = Field(None, description="a value between 0 to 100 to show the neuroticism, where 0 is stable and 100 is neurotic")
+    openness: str = Field(None, description="a value between 0 to 100 to show the openness, where 0 is close and 100 is open")
+    conscientiousness: str = Field(None, description="a value between 0 to 100 to show the conscientiousness, where 0 is spontaneous and 100 is conscientious")
+    extraversion: str = Field(None, description="a value between 0 to 100 to show the extraversion, where 0 is introverted and 100 is extraverted")
+    agreeableness: str = Field(None, description="a value between 0 to 100 to show the agreeableness, where 0 is hostile and 100 is agreeable")
+    neuroticism: str = Field(None, description="a value between 0 to 100 to show the neuroticism, where 0 is stable and 100 is neurotic")
 
 
 class Leadership_traits_bool(BaseModel):
@@ -67,15 +67,15 @@ class Leadership_traits_bool(BaseModel):
 
 
 class Leadership_traits(str, Enum):
-    Coercive = 'Coercive'
-    Authoritative = 'Authoritative'
-    Affiliative = 'Affiliative'
-    Democratic = 'Democratic'
-    Pacesetting = 'Pacesetting'
-    Coaching = 'Coaching'
+    Coercive = 'coercive'
+    Authoritative = 'authoritative'
+    Affiliative = 'affiliative'
+    Democratic = 'democratic'
+    Pacesetting = 'pacesetting'
+    Coaching = 'coaching'
 
 class Leadership_traits_dict(BaseModel):
-    Leadership_style: str = Field(None, description="select from Coercive, Authoritative, Affiliative, Democratic, Pacesetting, Coaching")
+    Leadership_style: str = Field(None, description="select from coercive, authoritative, affiliative, democratic, pacesetting, coaching")
 
 class PersonaProfile(BaseModel):
     first_name: str = Field(None, description="First name of the persona, cannot be left blank, do not always use the most common names")

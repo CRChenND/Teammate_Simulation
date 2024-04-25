@@ -1,8 +1,14 @@
-import React, { useState } from 'react';
-import { Grid, Button} from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Grid, Button } from '@mui/material';
 
-const LeadershipGrid = () => {
-  const [selectedId, setSelectedId] = useState(null);
+const LeadershipGrid = ({ selectedLeadership }) => {
+  const [selectedId, setSelectedId] = useState(selectedLeadership);
+
+  useEffect(() => {
+    setSelectedId(selectedLeadership);
+    selectCell(selectedLeadership);
+    console.log(selectedLeadership);
+  }, [selectedLeadership]);
 
   const selectCell = (id) => {
     setSelectedId(id);
@@ -25,8 +31,8 @@ const LeadershipGrid = () => {
             fullWidth
             variant={selectedId === style.id ? "contained" : "outlined"}
             onClick={() => selectCell(style.id)}
-            style={{ 
-              height: '56px', 
+            style={{
+              height: '56px',
               justifyContent: 'flex-start',
               backgroundColor: selectedId === style.id ? '#4caf50' : 'inherit', // Using hex color for green
             }}

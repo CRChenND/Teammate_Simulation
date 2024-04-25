@@ -9,37 +9,9 @@ import Slider from '@mui/material/Slider';
 import LeadershipGrid from './leadershipGrid';
 import Dialog from '@mui/material/Dialog';
 import LinearProgress from '@mui/material/LinearProgress';
+import TraitSliders from './traitSlider';
 
 
-// Define marks for each slider
-const marksOpenness = [
-  { value: 0, label: 'Close' },
-  { value: 100, label: 'Open' }
-];
-
-const marksConscientiousness = [
-  { value: 0, label: 'Spontaneous' },
-  { value: 100, label: 'Conscientious' }
-];
-
-const marksExtraversion = [
-  { value: 0, label: 'Introverted' },
-  { value: 100, label: 'Extroverted' }
-];
-
-const marksAgreeableness = [
-  { value: 0, label: 'Hostile' },
-  { value: 100, label: 'Agreeable' }
-];
-
-const marksNeuroticism = [
-  { value: 0, label: 'Stable' },
-  { value: 100, label: 'Neurotic' }
-];
-
-function valuetext(value) {
-  return `${value}`;
-}
 
 const Main = () => {
 
@@ -51,6 +23,14 @@ const Main = () => {
   const [englishProficiency, setEnglishProficiency] = useState('');
   const [major, setMajor] = useState('');
   const [grade, setGrade] = useState('');
+  const [personalityTraits, setPersonalityTraits] = useState({
+    openness: 50,
+    conscientiousness: 50,
+    extraversion: 50,
+    agreeableness: 50,
+    neuroticism: 50
+  });
+  const [selectedLeadership, setSelectedLeadership] = useState(null);
 
   const [loading, setLoading] = useState(false); 
 
@@ -66,7 +46,6 @@ const Main = () => {
       setLoading(true); 
       const inputElement = document.getElementById('outlined-basic');
       const inputValue = inputElement.value;
-      console.log(inputValue)
 
       // Send the input to the server endpoint
       const response = await fetch('http://127.0.0.1:5000/generate_profile', {
@@ -89,6 +68,17 @@ const Main = () => {
         setEnglishProficiency(jsonResponse["profile"]["english_proficiency"]);
         setMajor(jsonResponse["profile"]["major"]);
         setGrade(jsonResponse["profile"]["grade"]);
+
+        setSelectedLeadership(jsonResponse["profile"]["leadership_traits"]);
+        
+        const personalityTraits = jsonResponse["profile"]["personality_traits"];
+
+        const convertedTraits = Object.keys(personalityTraits).reduce((acc, key) => {
+          acc[key] = parseInt(personalityTraits[key], 10);
+          return acc;
+        }, {});
+
+        setPersonalityTraits(convertedTraits);
       } else {
         console.error('Server responded with status:', response.status);
       }
@@ -174,26 +164,13 @@ const Main = () => {
           Personality traits
         </Typography>
 
-        {['Openness', 'Conscientiousness', 'Extraversion', 'Agreeableness', 'Neuroticism'].map((trait, index) => (
-          <Box key={trait} sx={{ width: '80%', marginBottom: '20px' }}>
-            <Typography id={`slider-${trait.toLowerCase()}`} gutterBottom>
-              {trait}
-            </Typography>
-            <Slider
-              track="inverted"
-              aria-labelledby={`slider-${trait.toLowerCase()}`}
-              getAriaValueText={valuetext}
-              defaultValue={50}
-              marks={eval(`marks${trait}`)}
-            />
-          </Box>
-        ))}
+        <TraitSliders initialValues={personalityTraits} />
 
         <Typography variant="h6" component="h2" style={{ alignSelf: 'flex-start' , marginLeft: '10px', marginBottom: '5px', fontSize:"18px", fontWeight:"bold"}}>
           Leadership
         </Typography>
 
-        <LeadershipGrid/>
+        <LeadershipGrid selectedLeadership={selectedLeadership} />
 
       </Box>
 
