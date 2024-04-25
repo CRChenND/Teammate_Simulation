@@ -42,12 +42,20 @@ class Personality_traits_bool(BaseModel):
     Secure: bool
     Confident: bool
 
+# class Personality_traits_dict(BaseModel):
+#     Openness: str = Field(None, description="select from Curious, Inventive, Conservative, Cautious")
+#     Conscientiousness: str = Field(None, description="select from Efficient, Organized, Easygoing, Careless")
+#     Extraversion: str = Field(None, description="select from Outgoing, Energetic, Solitary, Reserved")
+#     Agreeableness: str = Field(None, description="select from Friendly, Compassionate, Challenging, Detached")
+#     Neuroticism: str = Field(None, description="select from Sensitive, Nervous, Secure, Confident")
+
 class Personality_traits_dict(BaseModel):
-    Openness: str = Field(None, description="select from Curious, Inventive, Conservative, Cautious")
-    Conscientiousness: str = Field(None, description="select from Efficient, Organized, Easygoing, Careless")
-    Extraversion: str = Field(None, description="select from Outgoing, Energetic, Solitary, Reserved")
-    Agreeableness: str = Field(None, description="select from Friendly, Compassionate, Challenging, Detached")
-    Neuroticism: str = Field(None, description="select from Sensitive, Nervous, Secure, Confident")
+    Openness: str = Field(None, description="a value between 0 to 100 to show the openness, where 0 is close and 100 is open")
+    Conscientiousness: str = Field(None, description="a value between 0 to 100 to show the conscientiousness, where 0 is spontaneous and 100 is conscientious")
+    Extraversion: str = Field(None, description="a value between 0 to 100 to show the extraversion, where 0 is introverted and 100 is extraverted")
+    Agreeableness: str = Field(None, description="a value between 0 to 100 to show the agreeableness, where 0 is hostile and 100 is agreeable")
+    Neuroticism: str = Field(None, description="a value between 0 to 100 to show the neuroticism, where 0 is stable and 100 is neurotic")
+
 
 class Leadership_traits_bool(BaseModel):
     Coercive: bool
@@ -76,10 +84,11 @@ class PersonaProfile(BaseModel):
     gender: str = Field(None, description="Gender of the persona, cannot be left blank")
     english_proficiency: str = Field(None, description="English proficiency of the persona, e.g. beginner, intermediate, advanced, native")
     major: str = Field(None, description="Major of the persona, e.g. computer science, physics, etc., do not always use the most common majors")
-    grades: str = Field(None, description="Grades in the format freshman, sophomore, junior, senior")
+    grade: str = Field(None, description="Grades in the format freshman, sophomore, junior, senior")
     personality_traits: Personality_traits_dict
     leadership_traits: Leadership_traits #= Field(None, description="Leadership style of the persona: Coercive, Authoritative, Affiliative, Democratic, Pacesetting, Coaching")
     additional_info: str = Field(None, description="Any additional information about the persona, e.g. hobbies, interests, etc.")
+    profile: str = Field(None, description="A paragraph of persona description")
 
 
 
@@ -105,8 +114,7 @@ def generate_persona_attributes(input_data: PersonaInput) -> PersonaProfile:
     result = chain.invoke(input={
         'guidance':input_data
     })
-    print(result["text"])
-    return result["text"]
+    return eval(result["text"])
 
 
 
