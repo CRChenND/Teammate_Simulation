@@ -13,6 +13,7 @@ const Main = () => {
     const navigate = useNavigate();
     const profileNav = () => {
         navigate("/profile");
+        navigate("/evaluation");
       };
 
     const [textInput, setTextInput] = useState("");
