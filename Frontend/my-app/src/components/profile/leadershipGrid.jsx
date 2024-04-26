@@ -7,7 +7,6 @@ const LeadershipGrid = ({ selectedLeadership }) => {
   useEffect(() => {
     setSelectedId(selectedLeadership);
     selectCell(selectedLeadership);
-    console.log(selectedLeadership);
   }, [selectedLeadership]);
 
   const selectCell = (id) => {

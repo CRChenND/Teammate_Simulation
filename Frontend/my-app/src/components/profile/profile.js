@@ -5,7 +5,6 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography'; 
-import Slider from '@mui/material/Slider';
 import LeadershipGrid from './leadershipGrid';
 import Dialog from '@mui/material/Dialog';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -16,6 +15,7 @@ import TraitSliders from './traitSlider';
 const Main = () => {
 
   const [profileDescription, setProfileDescription] = useState('');
+  const [imageURL, setImageURL] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [age, setAge] = useState('');
@@ -68,6 +68,8 @@ const Main = () => {
         setEnglishProficiency(jsonResponse["profile"]["english_proficiency"]);
         setMajor(jsonResponse["profile"]["major"]);
         setGrade(jsonResponse["profile"]["grade"]);
+
+        setImageURL(jsonResponse["image"])
 
         setSelectedLeadership(jsonResponse["profile"]["leadership_traits"]);
         
@@ -126,7 +128,7 @@ const Main = () => {
           <Avatar 
             style={{ height: '180px', width: '180px', marginTop: '10px' }}
             alt="Profile Avatar"
-            src="" // Add your image path here
+            src={imageURL}
           />
         </Box>
       </Box>

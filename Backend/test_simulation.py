@@ -203,8 +203,9 @@ def generate_conversation(input_profile_list, topic=''):
     )
 
     # generate a topic using the prompt
-    topic_random = generate_topic({"guidance": topic})
-    topic_random = post_process_output(topic_random)
+    # topic_random = generate_topic({"guidance": topic})
+    # topic_random = post_process_output(topic_random)
+    topic_random = topic
 
     print('topic:', topic_random)
 
@@ -225,7 +226,7 @@ def generate_conversation(input_profile_list, topic=''):
 
     json_file = convert_text_to_json(text)
 
-    return json_file, with_message_history
+    return eval(json_file)
 
 # def generate_more_conversation(with_message_history):
 #     text_previous = str(with_message_history.get_session_history("abc123"))
@@ -243,21 +244,21 @@ def generate_conversation(input_profile_list, topic=''):
 
 
 #agent1 = generate_persona_attributes({"guidance": "Alice: a 18-year-old computer science student who is passionate about AI."})
-agent1 = generate_persona_attributes({"guidance": ""})
-agent1 = generate_persona_description({"guidance": prompt_json["profile_description"] + str(agent1)})
-#agent2 = generate_persona_attributes({"guidance": "Bob: a 20-year-old applied physic student who is interested in investing in AI."})
-agent2 = generate_persona_attributes({"guidance": ""})
-agent2 = generate_persona_description({"guidance": prompt_json["profile_description"] + str(agent2)})
-#agent3 = generate_persona_attributes({"guidance": "Charlie: a 22-year-old AI researcher who is working on a new AI model"})
-agent3 = generate_persona_attributes({"guidance": ""})
-agent3 = generate_persona_description({"guidance": prompt_json["profile_description"] + str(agent3)})
+# agent1 = generate_persona_attributes({"guidance": ""})
+# agent1 = generate_persona_description({"guidance": prompt_json["profile_description"] + str(agent1)})
+# #agent2 = generate_persona_attributes({"guidance": "Bob: a 20-year-old applied physic student who is interested in investing in AI."})
+# agent2 = generate_persona_attributes({"guidance": ""})
+# agent2 = generate_persona_description({"guidance": prompt_json["profile_description"] + str(agent2)})
+# #agent3 = generate_persona_attributes({"guidance": "Charlie: a 22-year-old AI researcher who is working on a new AI model"})
+# agent3 = generate_persona_attributes({"guidance": ""})
+# agent3 = generate_persona_description({"guidance": prompt_json["profile_description"] + str(agent3)})
 
-agent_list = []
-agent_list.append(agent1)
-agent_list.append(agent2)
-agent_list.append(agent3)
+# agent_list = []
+# agent_list.append(agent1)
+# agent_list.append(agent2)
+# agent_list.append(agent3)
 
-generate_conversation(agent_list)
+# generate_conversation(agent_list)
 
 
 

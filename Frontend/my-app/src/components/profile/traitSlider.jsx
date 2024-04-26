@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
+import { Tooltip } from '@mui/material';
 
 const marks_openness = [
   { value: 0, label: 'Close' },
@@ -32,6 +33,14 @@ function valuetext(value) {
   return `${value}`;
 }
 
+const traitDescriptions = {
+  openness: "Openness to Experience: This trait involves the desire to try new things and engage in creative activities. It reflects how open-minded you are.",
+  conscientiousness: "Conscientiousness: This measures how organized and dependable you are. It involves your level of discipline and how meticulous you are with your tasks.",
+  extraversion: "Extraversion: This trait shows how much you enjoy social interactions and being around people. High scores indicate you are outgoing and energetic.",
+  agreeableness: "Agreeableness: This measures your level of cooperation and kindness towards others.",
+  neuroticism: "Neuroticism: This trait involves emotional sensitivity and how often you experience negative emotions."
+};
+
 function TraitSliders(props) {
   const [openness, set_openness] = useState(props.initialValues.openness);
   const [conscientiousness, set_conscientiousness] = useState(props.initialValues.conscientiousness);
@@ -58,9 +67,13 @@ function TraitSliders(props) {
         flexDirection: 'column',
         alignItems: 'center'
         }}>
-        <Typography id={`slider-${trait.toLowerCase()}`} gutterBottom sx={{ textAlign: 'center' }}>
-            {trait}
-        </Typography>
+        
+        <Tooltip title={traitDescriptions[trait]} placement="top">
+            <Typography gutterBottom>
+              {trait}
+            </Typography>
+        </Tooltip>
+
         <Slider
             aria-labelledby={`slider-${trait.toLowerCase()}`}
             getAriaValueText={valuetext}

@@ -121,7 +121,7 @@ def generate_persona_attributes(input_data: PersonaInput) -> PersonaProfile:
 
 def generate_image(input_str):
     prompt = PromptTemplate(
-        template="Generate a realistic portrait of a college student based on {guidance}. This photo should be similar to a ID photo and will be used as a LinkedIn profile picture.",
+        template="Generate a realistic portrait of {guidance}.",
         input_variables=['guidance'],
     )
 
@@ -189,8 +189,8 @@ def post_process_output(output):
     output = output.replace("}", "")
     return output
 
-input = 'a 20-year-old Asian girl'
-generate_image(input)
+# input = 'a 20-year-old Asian girl'
+# generate_image(input)
 
 # load json file
 #prompt = load_json('prompt.json')
