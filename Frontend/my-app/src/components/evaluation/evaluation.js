@@ -99,13 +99,13 @@ const Main = () => {
                 <Typography variant="subtitle1" sx={{ px: 2 }} >Overall</Typography>
               </ButtonBase>
               <ButtonBase sx={{ borderRadius: '50%', border: '2px solid gray' }}>
-                <Avatar alt="Person 1" src="/path-to-person1-image.jpg" />
+                <Avatar alt="Person 1" src="https://as1.ftcdn.net/v2/jpg/01/94/29/04/1000_F_194290469_d7d6f6KmCsldKgtgImtsPQqkQ3QG1l9V.jpg" />
               </ButtonBase>
               <ButtonBase sx={{ borderRadius: '50%', border: '2px solid gray' }}>
-                <Avatar alt="Person 2" src="/path-to-person2-image.jpg" />
+                <Avatar alt="Person 2" src="https://as1.ftcdn.net/v2/jpg/01/94/29/04/1000_F_194290469_d7d6f6KmCsldKgtgImtsPQqkQ3QG1l9V.jpg" />
               </ButtonBase>
               <ButtonBase sx={{ borderRadius: '50%', border: '2px solid gray' }}>
-                <Avatar alt="Person 3" src="/path-to-person3-image.jpg" />
+                <Avatar alt="Person 3" src="https://as1.ftcdn.net/v2/jpg/01/97/11/64/1000_F_197116416_hpfTtXSoJMvMqU99n6hGP4xX0ejYa4M7.jpg" />
               </ButtonBase>
             </Stack>
           </Box>
